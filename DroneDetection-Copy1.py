@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[12]:
 
 
 # Some of these imports might not be completely necessary but just to be safe we chose to keep all of them
@@ -13,7 +13,7 @@ import random
 import os
 
 
-# In[2]:
+# In[24]:
 
 
 ####################### STEP 1: BACKGOUND REMOVAL #######################
@@ -25,7 +25,7 @@ def load_infrared_cleaned_image(image_number):
     
     # Inserting unique path (obviously we will each have a unique path here)
     # Make sure that you have the second backslash at the end 
-    path = r"C:\Users\bbrec\Downloads\data22\\" + image_number + ".bmp"
+    path = r"C:\Users\bbrec\Downloads\data11\\" + image_number + ".bmp"
     image = cv2.imread(path)
     
     # Resizing the image. Got from ChatGPT
@@ -64,11 +64,11 @@ def load_grayscale_cleaned_image(image_number):
     
     # Inserting unique path (obviously we will each have a unique path here)
     # Make sure that you have the second backslash VV 
-    path = r"C:\Users\bbrec\Downloads\data22\\" + image_number + ".bmp"
+    path = r"C:\Users\bbrec\Downloads\data11\\" + image_number + ".bmp"
     image = cv2.imread(path)
     
     # Resizing the image. Got from ChatGPT
-    new_size = (600, 600)  # Specify the new dimensions
+    new_size = (700, 600)  # Specify the new dimensions
     resized_image = cv2.resize(image, new_size)
     
     # Converting the image to infrared. Got from ChatGPT
@@ -81,6 +81,7 @@ def load_grayscale_cleaned_image(image_number):
     
     # Subtracting the median image from the infrared image in order to make the drone stand out more. 
     final_image = cv2.subtract(grayscale_image,median_image)
+    #final_image2 = cv2.cvtColor(final_image, cv2.COLOR_BGR2GRAY)
     
     
     
@@ -90,19 +91,20 @@ def load_grayscale_cleaned_image(image_number):
     #cv2.imshow(window_name, infrared_image)
     
     #cv2.imshow(window_name, final_image)
-    new_grey = final_image
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    return new_grey
+    #new_grey = final_image2
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows()
+    #return new_grey
+    return final_image
 
 
-# In[ ]:
+# In[25]:
 
 
 
 
 
-# In[3]:
+# In[26]:
 
 
 ####################### STEP 2: OBJECT DETECTION #######################
@@ -118,26 +120,33 @@ def findDroneNaive(pic):
     (minVal,maxVal,minLoc,maxLoc) = cv2.minMaxLoc(gray)
     
     # Drawing the circle around the brightest pixel
-    cv2.circle(firstImage, maxLoc, 25, (0,255,0),1)
+    cv2.circle(firstImage, maxLoc, 20, (0,255,0),0)
     
     # Showing the image
     cv2.imshow("Naive",firstImage)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+    #return maxLoc
     #return firstImage
 
 
-# In[4]:
+# In[27]:
 
 
 # Test 1
 i=0
-while i < 7:    
+while i < 25:    
     findDroneNaive(i)
     i+=1
 
 
-# In[6]:
+# In[ ]:
+
+
+
+
+
+# In[28]:
 
 
 # This is the Robust function. ideally this function finds the brightest region in the picture. Still needs some fine 
@@ -146,7 +155,7 @@ def findDroneRobust(picNumber):
     
     # Loading the images
     gray = load_grayscale_cleaned_image(picNumber)
-    #orig = load_infrared_cleaned_image(picNumber)
+    orig = load_infrared_cleaned_image(picNumber)
     
     # Implementing the Gaussian Blur which causes the computer to look at the birghtest regions of the image rather than 
     # the single brightest pixel. 
@@ -160,33 +169,40 @@ def findDroneRobust(picNumber):
     cv2.circle(image,maxLoc, 25, (100,255,100), 2)
     
     # Showing the circle
-    cv2.imshow("Robust", image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    #this = image
-    #return(this)
+    this = image
+    #cv2.imshow("Robust", this)
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows()
+    return maxLoc
 
 
-# In[8]:
+# In[29]:
 
 
-# Test Two
-i = 0 
-while i < 7:
-    cv2.imshow("this", findDroneRobust(i))
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+i = 0
+while i < 20:
+    findDroneRobust(i)
     i+=1
 
 
-# In[12]:
+# In[ ]:
 
 
-# Test 2 
-i=0
-while i < 7:    
-    findDroneNaive(i)
-    i+=1
+
+
+
+# ## 
+
+# In[ ]:
+
+
+
+
+
+# In[16]:
+
+
+
 
 
 # In[22]:
@@ -311,5 +327,10 @@ def findDroneRobust2(picNumber):
 # In[ ]:
 
 
-# 
+
+
+
+# In[ ]:
+
+
 
